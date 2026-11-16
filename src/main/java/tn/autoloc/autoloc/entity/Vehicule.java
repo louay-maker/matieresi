@@ -1,7 +1,10 @@
 package tn.autoloc.autoloc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Vehicule {
@@ -24,7 +27,16 @@ public class Vehicule {
 
     @ManyToOne
     @JoinColumn(name = "agence_id")
+    @JsonIgnoreProperties("vehicules")
     private Agence agence;
+
+    @ManyToMany
+    @JoinTable(
+        name = "vehicule_equipement",
+        joinColumns = @JoinColumn(name = "vehicule_id"),
+        inverseJoinColumns = @JoinColumn(name = "equipement_id")
+    )
+    private List<Equipement> equipements = new ArrayList<>();
 
     public Vehicule() {
     }
@@ -91,5 +103,13 @@ public class Vehicule {
 
     public void setAgence(Agence agence) {
         this.agence = agence;
+    }
+
+    public List<Equipement> getEquipements() {
+        return equipements;
+    }
+
+    public void setEquipements(List<Equipement> equipements) {
+        this.equipements = equipements;
     }
 }
