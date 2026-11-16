@@ -36,4 +36,5 @@ build/
 tools/
 *.zip
 *.log
+*.ps1
 .claude/

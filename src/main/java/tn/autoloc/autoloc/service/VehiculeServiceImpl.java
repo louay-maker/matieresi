@@ -109,5 +109,15 @@ public class VehiculeServiceImpl implements IVehiculeService {
         log.info("Nombre total de véhicules enregistrés : {}", total);
         log.info("==================================================================");
     }
+
+    // Méthode de test simulant un traitement lourd pour tester PerformanceAspect (> 1000 ms)
+    @Override
+    public void testerMethodeLente() {
+        try {
+            Thread.sleep(1200); // 1.2 seconde
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
 

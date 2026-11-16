@@ -14,5 +14,6 @@ public interface IVehiculeService {
     Vehicule desaffecterEquipement(Long idVehicule, Long idEquipement);
     void actualiserEtatVehicules();
     void genererRapportVehicules();
+    void testerMethodeLente();
 }
 
