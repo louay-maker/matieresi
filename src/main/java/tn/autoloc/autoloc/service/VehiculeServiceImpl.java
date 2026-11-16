@@ -1,6 +1,8 @@
 package tn.autoloc.autoloc.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.autoloc.autoloc.entity.Equipement;
@@ -8,9 +10,12 @@ import tn.autoloc.autoloc.entity.Vehicule;
 import tn.autoloc.autoloc.repository.EquipementRepository;
 import tn.autoloc.autoloc.repository.VehiculeRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class VehiculeServiceImpl implements IVehiculeService {
@@ -78,6 +83,31 @@ public class VehiculeServiceImpl implements IVehiculeService {
         }
 
         return vehiculeRepository.save(vehicule);
+    }
+
+    // Question 1 – Actualisation des données des véhicules
+    // Démarre 5 secondes après le lancement, puis se répète toutes les 60 secondes
+    @Override
+    @Scheduled(initialDelay = 5000, fixedRate = 60000)
+    public void actualiserEtatVehicules() {
+        List<Vehicule> vehicules = vehiculeRepository.findAll();
+        String dateHeure = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        log.info("[Actualisation Véhicules] Date et Heure: {} | Nombre total de véhicules enregistrés: {}",
+                dateHeure, vehicules.size());
+    }
+
+    // Question 3 – Génération d'un rapport périodique
+    // S'exécute automatiquement tous les lundis à 09h00
+    @Override
+    @Scheduled(cron = "0 0 9 ? * MON")
+    public void genererRapportVehicules() {
+        List<Vehicule> vehicules = vehiculeRepository.findAll();
+        int total = vehicules.size();
+        String dateHeure = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        log.info("================ RAPPORT PÉRIODIQUE DES VÉHICULES ================");
+        log.info("Date et Heure de génération : {}", dateHeure);
+        log.info("Nombre total de véhicules enregistrés : {}", total);
+        log.info("==================================================================");
     }
 }
 

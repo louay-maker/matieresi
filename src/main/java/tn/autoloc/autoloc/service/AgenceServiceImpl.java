@@ -1,6 +1,8 @@
 package tn.autoloc.autoloc.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tn.autoloc.autoloc.entity.Agence;
@@ -8,8 +10,11 @@ import tn.autoloc.autoloc.entity.Vehicule;
 import tn.autoloc.autoloc.repository.AgenceRepository;
 import tn.autoloc.autoloc.repository.VehiculeRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AgenceServiceImpl implements IAgenceService {
@@ -60,5 +65,16 @@ public class AgenceServiceImpl implements IAgenceService {
 
         nouvelleAgence.setVehicules(vehicules);
         return nouvelleAgence;
+    }
+
+    // Question 2 – Suivi des agences
+    // S'exécute automatiquement avec un délai de 2 minutes (120000 ms) après la fin de chaque exécution
+    @Override
+    @Scheduled(fixedDelay = 120000)
+    public void suivreNombreAgences() {
+        List<Agence> agences = agenceRepository.findAll();
+        String dateHeure = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        log.info("[Suivi Agences] Date et Heure: {} | Nombre total d'agences enregistrées: {}",
+                dateHeure, agences.size());
     }
 }

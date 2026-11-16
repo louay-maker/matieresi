@@ -35,4 +35,5 @@ build/
 ### Tools ###
 tools/
 *.zip
+*.log
 .claude/
